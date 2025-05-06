@@ -167,9 +167,10 @@ def play(strategy0, strategy1, update, score0=0, score1=0, dice=six_sided, goal=
     while score0 < goal and score1 < goal:
         if who == 0:
             score0 = update(strategy0(score0, score1), score0, score1, dice)
+            who = 1
         else:
             score1 = update(strategy1(score1, score0), score1, score0, dice)
-        who = 1 - who
+            who = 0
     # END PROBLEM 5
     return score0, score1
 
