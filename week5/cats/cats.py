@@ -368,7 +368,15 @@ def time_per_word(words, timestamps_per_player):
     """
     tpp = timestamps_per_player  # A shorter name (for convenience)
     # BEGIN PROBLEM 9
-    times = []  # You may remove this line
+    times = []
+
+    for arr in tpp:
+        i, temp = 1, []
+        while i < len(arr):
+            temp.append(arr[i] - arr[i - 1])
+            i += 1
+        times.append(temp)
+
     # END PROBLEM 9
     return {'words': words, 'times': times}
 
@@ -396,7 +404,18 @@ def fastest_words(words_and_times):
     player_indices = range(len(times))  # contains an *index* for each player
     word_indices = range(len(words))    # contains an *index* for each word
     # BEGIN PROBLEM 10
-    "*** YOUR CODE HERE ***"
+
+    result = [[] for _ in player_indices]
+
+    for j in word_indices:
+        fastest_index, fastest_time = 0, get_time(times, 0, j)
+        for i in player_indices:
+            if times[i][j] < fastest_time:
+                fastest_index = i
+                fastest_time = get_time(times, i, j)
+        result[fastest_index].append(words[j])
+
+    return result        
     # END PROBLEM 10
 
 
