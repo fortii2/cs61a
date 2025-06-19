@@ -52,10 +52,23 @@ class Frame:
         >>> env.make_child_frame(formals, expressions)
         <{a: 1, b: 2, c: 3} -> <Global Frame>>
         """
+        def count(pair):
+            num = 0
+            while pair is not nil:
+                num, pair = num + 1, pair.rest
+            return num
+        
         if len(formals) != len(vals):
             raise SchemeError('Incorrect number of arguments to function call')
         # BEGIN PROBLEM 8
-        "*** YOUR CODE HERE ***"
+        frame = Frame(self)
+        if count(formals) == count(vals):
+            while formals is not nil:
+                frame.bindings[formals.first] = vals.first
+                formals, vals = formals.rest, vals.rest
+            return frame
+        else:
+            raise SchemeError('too many or too few vals are given.')
         # END PROBLEM 8
 
 ##############
