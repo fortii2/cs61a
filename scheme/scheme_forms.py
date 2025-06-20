@@ -119,7 +119,18 @@ def do_and_form(expressions, env):
     False
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    cur = expressions
+    if cur is nil:
+        return True
+
+    while cur is not nil:
+        cur_val = scheme_eval(cur.first, env)
+
+        if not is_scheme_true(cur_val):
+            return False
+
+        cur = cur.rest
+    return cur_val
     # END PROBLEM 12
 
 def do_or_form(expressions, env):
@@ -137,7 +148,18 @@ def do_or_form(expressions, env):
     6
     """
     # BEGIN PROBLEM 12
-    "*** YOUR CODE HERE ***"
+    cur = expressions
+    if cur is nil:
+        return False
+
+    while cur is not nil:
+        cur_val = scheme_eval(cur.first, env)
+
+        if is_scheme_true(cur_val):
+            return cur_val
+
+        cur = cur.rest
+    return False
     # END PROBLEM 12
 
 def do_cond_form(expressions, env):
@@ -157,7 +179,11 @@ def do_cond_form(expressions, env):
             test = scheme_eval(clause.first, env)
         if is_scheme_true(test):
             # BEGIN PROBLEM 13
-            "*** YOUR CODE HERE ***"
+            print("DEBUG: clause:", clause)
+            if clause.rest is nil:
+                return test
+            else:
+                return eval_all(clause.rest, env)
             # END PROBLEM 13
         expressions = expressions.rest
 
@@ -177,14 +203,32 @@ def make_let_frame(bindings, env):
     BINDINGS. The Scheme list BINDINGS must have the form of a proper bindings
     list in a let expression: each item must be a list containing a symbol
     and a Scheme expression."""
+    def reverse(lst):
+        result = nil
+        while lst is not nil:
+            result = Pair(lst.first, result)
+            lst = lst.rest
+        return result
+
     if not scheme_listp(bindings):
         raise SchemeError('bad bindings list in let form')
     names = vals = nil
     # BEGIN PROBLEM 14
-    "*** YOUR CODE HERE ***"
+    while bindings is not nil:
+        binding = bindings.first
+        validate_form(binding, 2, 2)
+        name, expr = binding.first, binding.rest.first
+
+        val = scheme_eval(expr, env)  
+        names = Pair(name, names)
+        vals = Pair(val, vals)
+        bindings = bindings.rest
+    names = reverse(names)
+    vals = reverse(vals)
+
+    validate_formals(names)
     # END PROBLEM 14
     return env.make_child_frame(names, vals)
-
 
 
 def do_quasiquote_form(expressions, env):
